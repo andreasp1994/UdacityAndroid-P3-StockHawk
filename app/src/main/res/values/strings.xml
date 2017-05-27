@@ -36,7 +36,7 @@
     <!--Content Descriptions -->
     <string name="content_description_fab_add_stock">Add Stock</string>
 
-    <string name="title_activity_stock_chart">StockChartActivity</string>
-    <string name="title_widget">Stock Hawk Widget</string>
+    <string name="title_activity_stock_chart" translatable="false">StockChartActivity</string>
+    <string name="title_widget" translatable="false">Stock Hawk Widget</string>
 
 </resources>
