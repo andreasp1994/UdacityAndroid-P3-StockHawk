@@ -10,11 +10,14 @@ import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import timber.log.Timber;
+
 
 public class StockProvider extends ContentProvider {
 
     private static final int QUOTE = 100;
     private static final int QUOTE_FOR_SYMBOL = 101;
+    private static final int STOCK_HISTORY = 102;
 
     private static final UriMatcher uriMatcher = buildUriMatcher();
 
@@ -24,9 +27,13 @@ public class StockProvider extends ContentProvider {
         UriMatcher matcher = new UriMatcher(UriMatcher.NO_MATCH);
         matcher.addURI(Contract.AUTHORITY, Contract.PATH_QUOTE, QUOTE);
         matcher.addURI(Contract.AUTHORITY, Contract.PATH_QUOTE_WITH_SYMBOL, QUOTE_FOR_SYMBOL);
+        matcher.addURI(Contract.AUTHORITY, Contract.PATH_STOCK_HISTORY, STOCK_HISTORY);
         return matcher;
     }
 
+    public StockProvider() {
+        super();
+    }
 
     @Override
     public boolean onCreate() {
@@ -64,6 +71,17 @@ public class StockProvider extends ContentProvider {
                         sortOrder
                 );
 
+                break;
+            case STOCK_HISTORY:
+                returnCursor = db.query(
+                        Contract.StockHistory.TABLE_NAME,
+                        projection,
+                        selection,
+                        selectionArgs,
+                        null,
+                        null,
+                        sortOrder
+                );
                 break;
             default:
                 throw new UnsupportedOperationException("Unknown URI:" + uri);
@@ -183,6 +201,29 @@ public class StockProvider extends ContentProvider {
                 }
 
                 return returnCount;
+            case STOCK_HISTORY:
+                db.beginTransaction();
+                int count = 0;
+                try {
+                    for (ContentValues value : values) {
+                        db.insert(
+                                Contract.StockHistory.TABLE_NAME,
+                                null,
+                                value
+                        );
+                    }
+                    db.setTransactionSuccessful();
+                } finally {
+                    db.endTransaction();
+                }
+
+                Context c = getContext();
+                if (c != null) {
+                    c.getContentResolver().notifyChange(uri, null);
+                }
+
+                return count;
+
             default:
                 return super.bulkInsert(uri, values);
         }

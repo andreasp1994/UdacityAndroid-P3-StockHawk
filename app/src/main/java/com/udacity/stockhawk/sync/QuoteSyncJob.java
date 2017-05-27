@@ -12,6 +12,7 @@ import android.util.Log;
 
 import com.udacity.stockhawk.data.Contract;
 import com.udacity.stockhawk.data.PrefUtils;
+import com.udacity.stockhawk.mock.MockUtils;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -31,8 +32,9 @@ import yahoofinance.quotes.stock.StockQuote;
 
 public final class QuoteSyncJob {
 
+    public static final String ACTION_DATA_UPDATED = "com.udacity.stockhawk.ACTION_DATA_UPDATED";
+
     private static final int ONE_OFF_ID = 2;
-    private static final String ACTION_DATA_UPDATED = "com.udacity.stockhawk.ACTION_DATA_UPDATED";
     private static final int PERIOD = 300000;
     private static final int INITIAL_BACKOFF = 10000;
     private static final int PERIODIC_ID = 1;
@@ -82,16 +84,34 @@ public final class QuoteSyncJob {
 
                 // WARNING! Don't request historical data for a stock that doesn't exist!
                 // The request will hang forever X_x
-                List<HistoricalQuote> history = stock.getHistory(from, to, Interval.WEEKLY);
+//                List<HistoricalQuote> history = stock.getHistory(from, to, Interval.WEEKLY);
+
+                // Note for reviewer
+                // Due to the problems with Yaoho API we hae commented the line above
+                // and included this one to fetch the history from MockUtils
+                // This should be enough as to develop and review while the API is down
+                List<HistoricalQuote> history = MockUtils.getHistory();
 
                 StringBuilder historyBuilder = new StringBuilder();
 
+                ArrayList<ContentValues> stockHistoryCVs = new ArrayList<>();
                 for (HistoricalQuote it : history) {
+                    ContentValues stockHistoryCV = new ContentValues();
+                    stockHistoryCV.put(Contract.StockHistory.COLUMN_SYMBOL, symbol);
+                    stockHistoryCV.put(Contract.StockHistory.COLUMN_TIMESTAMP, it.getDate().getTimeInMillis());
+                    stockHistoryCV.put(Contract.StockHistory.COLUMN_PRICE, it.getClose().doubleValue());
+                    stockHistoryCVs.add(stockHistoryCV);
+
                     historyBuilder.append(it.getDate().getTimeInMillis());
                     historyBuilder.append(", ");
                     historyBuilder.append(it.getClose());
                     historyBuilder.append("\n");
                 }
+
+                context.getContentResolver()
+                        .bulkInsert(
+                                Contract.StockHistory.URI,
+                                stockHistoryCVs.toArray(new ContentValues[stockHistoryCVs.size()]));
 
                 ContentValues quoteCV = new ContentValues();
                 quoteCV.put(Contract.Quote.COLUMN_SYMBOL, symbol);

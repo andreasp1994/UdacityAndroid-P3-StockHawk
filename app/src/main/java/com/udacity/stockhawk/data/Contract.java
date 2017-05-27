@@ -11,6 +11,7 @@ public final class Contract {
     static final String AUTHORITY = "com.udacity.stockhawk";
     static final String PATH_QUOTE = "quote";
     static final String PATH_QUOTE_WITH_SYMBOL = "quote/*";
+    static final String PATH_STOCK_HISTORY = "stock_history";
     private static final Uri BASE_URI = Uri.parse("content://" + AUTHORITY);
 
     private Contract() {
@@ -48,7 +49,25 @@ public final class Contract {
         static String getStockFromUri(Uri queryUri) {
             return queryUri.getLastPathSegment();
         }
+    }
 
+    public static final class StockHistory implements BaseColumns {
+
+        public static final Uri URI = BASE_URI.buildUpon().appendPath(PATH_STOCK_HISTORY).build();
+        public static final String COLUMN_SYMBOL = "symbol";
+        public static final String COLUMN_TIMESTAMP = "timestamp";
+        public static final String COLUMN_PRICE = "price";
+        public static final int POSITION_ID = 0;
+        public static final int POSITION_SYMBOL = 1;
+        public static final int POSITION_TIMESTAMP = 2;
+        public static final int POSITION_PRICE = 3;
+        public static final ImmutableList<String> STOCK_HISTORY_COLUMNS = ImmutableList.of(
+                _ID,
+                COLUMN_SYMBOL,
+                COLUMN_TIMESTAMP,
+                COLUMN_PRICE
+        );
+        static final String TABLE_NAME = "stock_history";
 
     }
 
