@@ -63,21 +63,20 @@ public class StockWidgetDataProvider implements RemoteViewsService.RemoteViewsFa
 
     @Override
     public RemoteViews getViewAt(int position) {
-        Timber.d("VIEW");
         RemoteViews view = new RemoteViews(context.getPackageName(),
                 R.layout.list_item_quote);
 
         data.moveToPosition(position);
         view.setTextViewText(R.id.symbol, data.getString(Contract.Quote.POSITION_SYMBOL));
-        view.setTextViewText(R.id.symbol, dollarFormat.format(data.getFloat(Contract.Quote.POSITION_PRICE)));
+        view.setTextViewText(R.id.price, dollarFormat.format(data.getFloat(Contract.Quote.POSITION_PRICE)));
 
         float rawAbsoluteChange = data.getFloat(Contract.Quote.POSITION_ABSOLUTE_CHANGE);
         float percentageChange = data.getFloat(Contract.Quote.POSITION_PERCENTAGE_CHANGE);
 
         if (rawAbsoluteChange > 0) {
-            view.setImageViewResource(R.id.change,  R.drawable.percent_change_pill_green);
+            view.setInt(R.id.change, "setBackgroundResource", R.drawable.percent_change_pill_green);
         } else {
-            view.setImageViewResource(R.id.change,  R.drawable.percent_change_pill_red);
+            view.setInt(R.id.change, "setBackgroundResource", R.drawable.percent_change_pill_red);
         }
 
         String change = dollarFormatWithPlus.format(rawAbsoluteChange);

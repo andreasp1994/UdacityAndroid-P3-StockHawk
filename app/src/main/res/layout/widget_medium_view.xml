@@ -10,11 +10,19 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
+        android:background="@color/background_default_dark"
         android:padding="4dp">
+
+        <TextView
+            android:background="@color/colorPrimary"
+            android:textSize="@dimen/widget_title_size"
+            android:gravity="center"
+            android:text="@string/app_name"
+            android:layout_width="match_parent"
+            android:layout_height="50dp" />
 
         <ListView
                 android:id="@+id/widget_list_view"
-                android:background="@color/light_white"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:paddingStart="@dimen/activity_horizontal_margin"

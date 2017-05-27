@@ -1,20 +1,13 @@
 package com.udacity.stockhawk.widget;
 
-import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.widget.RemoteViews;
 
-import com.udacity.stockhawk.R;
 import com.udacity.stockhawk.sync.QuoteSyncJob;
-import com.udacity.stockhawk.ui.MainActivity;
-
-import timber.log.Timber;
 
 /**
  * Created by andreas on 26/05/17.

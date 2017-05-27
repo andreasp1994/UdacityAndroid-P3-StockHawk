@@ -1,6 +1,7 @@
 <resources>
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="widget_default_height">180dp</dimen>
-    <dimen name="widget_default_width">180dp</dimen>
-    <dimen name="widget_margin">16dp</dimen>
+    <dimen name="widget_default_width">250dp</dimen>
+    <dimen name="widget_margin">0dp</dimen>
+    <dimen name="widget_title_size">20sp</dimen>
 </resources>
